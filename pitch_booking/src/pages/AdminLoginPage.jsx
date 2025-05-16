@@ -22,7 +22,7 @@ const AdminLoginPage = () => {
           setError("Invalid credentials");
         }
       } else {
-        alert("Account created!!!");
+        alert("Account created");
       }
       setLoading(false);
     }, 1000);
@@ -120,6 +120,7 @@ const renderHeader = () => (
                   />
                 </div>
                 
+                <div className="flex space-x-4">
                   <input
                   type="text"
                   placeholder="Country"
@@ -132,6 +133,7 @@ const renderHeader = () => (
                   className="w-1/2 px-4 py-2 border rounded-lg text-sm"
                   required
                 />
+                </div>
                 <div className="flex gap-3">
                   <input
                     type="text"
