@@ -22,7 +22,7 @@ const AdminLoginPage = () => {
           setError("Invalid credentials");
         }
       } else {
-        alert("Account created!");
+        alert("Account created!!!");
       }
       setLoading(false);
     }, 1000);
