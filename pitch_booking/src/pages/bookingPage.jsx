@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/navBar";
 import CustomDropdown from "../components/customDropDown";
+import Booking_Card from "../components/booking_Card";
+import PopUpForm from "../components/openModal";
 
 const BookingPage = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = () => setShowModal(true);
+  const closeModal = () => setShowModal(false);
+
   const sportOptions = ["All Sports", "Football Pitch", "Tennis Volley Court"];
   return (
     <div className="w-full text-gray-700">
@@ -69,6 +76,22 @@ const BookingPage = () => {
 
       <div className="bg-gray-100 p-6 rounded-md shadow-sm">
         <p className="text-lg font-semibold mb-2">Choose a Specific Time</p>
+
+        <div className="grid grid-cols-4 gap-4">
+          <Booking_Card onBookClick={openModal} />
+          <Booking_Card onBookClick={openModal} />
+          <Booking_Card onBookClick={openModal} />
+          <Booking_Card />
+          <Booking_Card />
+          <Booking_Card />
+          <Booking_Card />
+          <Booking_Card />
+          <Booking_Card />
+          <Booking_Card />
+          <Booking_Card />
+          <Booking_Card />
+        </div>
+        <PopUpForm show={showModal} onClose={closeModal} />
       </div>
     </div>
   );
