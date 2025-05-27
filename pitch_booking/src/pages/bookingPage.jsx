@@ -4,13 +4,17 @@ import CustomDropdown from "../components/customDropDown";
 import Booking_Card from "../components/booking_Card";
 import PopUpForm from "../components/openModal";
 
+
+
 const BookingPage = () => {
   const [showModal, setShowModal] = useState(false);
-
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
 
+ 
+
   const sportOptions = ["All Sports", "Football Pitch", "Tennis Volley Court"];
+
   return (
     <div className="w-full text-gray-700">
       {/* 🔷 Section 1: Hero with background */}

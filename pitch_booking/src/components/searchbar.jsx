@@ -1,6 +1,8 @@
 import React from "react";
+import { useGlobalContext } from "../context/global_context";
 
 function SearchBar() {
+  const { selectedDate, setSelectedDate } = useGlobalContext();
   return (
     <div className="relative z-20 bg-gray-100 px-2 py-1.5 rounded-full flex items-center h-10 justify-center w-full shadow-md">
       {/* Location Input */}
@@ -16,6 +18,8 @@ function SearchBar() {
       {/* Date Input */}
       <input
         type="date"
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(e.target.value)}
         className="bg-transparent text-xs font-medium outline-none text-gray-500 px-2"
       />
 
