@@ -3,17 +3,16 @@ import Header from "../components/navBar";
 import CustomDropdown from "../components/customDropDown";
 import Booking_Card from "../components/booking_Card";
 import PopUpForm from "../components/openModal";
-
-
+import { useGlobalContext } from "../context/global_context";
 
 const BookingPage = () => {
   const [showModal, setShowModal] = useState(false);
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
-
- 
+  const { Pitchdetails } = useGlobalContext();
 
   const sportOptions = ["All Sports", "Football Pitch", "Tennis Volley Court"];
+  console.log("Pitch details:", Pitchdetails.imageUrl);
 
   return (
     <div className="w-full text-gray-700">
@@ -21,8 +20,8 @@ const BookingPage = () => {
       <div
         className="relative pt-4 px-3 w-full h-[60vh]"
         style={{
-          backgroundImage:
-            "url('https://images.pexels.com/photos/46798/the-ball-stadion-football-the-pitch-46798.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
+          backgroundImage: `url(${Pitchdetails.imageUrl})`,
+          //  "url('https://images.pexels.com/photos/46798/the-ball-stadion-football-the-pitch-46798.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",

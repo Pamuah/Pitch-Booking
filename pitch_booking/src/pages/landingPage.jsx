@@ -1,8 +1,10 @@
 import React from "react";
 import Header from "../components/navBar";
+import { useNavigate } from "react-router-dom";
 // import {motion} from 'framer-motion';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   return (
     <div
       className="relative min-h-screen w-full pt-4 px-3"
@@ -29,7 +31,10 @@ const LandingPage = () => {
           easy for you to manage. Online booking software trusted by many sports
           facilities in Ghana
         </p>
-        <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-full">
+        <button
+          onClick={() => navigate("/homepage")}
+          className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-full"
+        >
           Get Started
         </button>
       </div>

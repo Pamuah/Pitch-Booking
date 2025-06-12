@@ -41,9 +41,9 @@ const HomePage = () => {
       <Header />
 
       {/* Filter Panel + Pitches */}
-      <div className="flex flex-row gap-x-4">
+      <div className="flex flex-col gap-y-3 md:flex-row gap-x-4 mt-4">
         {/* Filter Sidebar */}
-        <div className="flex flex-col gap-y-2 bg-white shadow-xl sticky top-0 z-20 min-h-48 w-64 rounded-lg p-4">
+        <div className="flex flex-col justify-center gap-y-2 bg-white shadow-xl md:sticky top-0 z-10 md:h-[45vh] w-64 rounded-lg p-4">
           <h5 className="text-sm font-medium mb-2">Filter results</h5>
           <CustomDropdown
             options={sportOptions}
@@ -71,7 +71,7 @@ const HomePage = () => {
           ) : pitches.length === 0 ? (
             <p>No pitches available.</p>
           ) : (
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {pitches.map((pitch) => (
                 <CustomCard
                   key={pitch._id}

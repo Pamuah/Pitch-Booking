@@ -10,7 +10,7 @@ function App() {
     <Router>
       <GlobalContextProvider>
         <Routes>
-          <Route index element={<HomePage />} />
+          <Route index element={<LandingPage />} />
           <Route path="/homepage" element={<HomePage />} />
           <Route path="/landingPage" element={<LandingPage />} />
           <Route path="/bookingPage" element={<BookingPage />} />
