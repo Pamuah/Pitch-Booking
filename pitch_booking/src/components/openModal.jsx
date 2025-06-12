@@ -1,17 +1,42 @@
 import React from "react";
+import { useGlobalContext } from "../context/global_context";
+import { PostData } from "../api services/post_service";
 
 const PopUpForm = ({ show, onClose }) => {
-  const [name, setName] = React.useState("");
-  const [contact, setContact] = React.useState("");
+  const { bookerInfo, setBookerInfo, Pitchdetails, selectedDate } =
+    useGlobalContext();
 
   const handleSubmit = () => {
-    alert(`Name: ${name}\nContact: ${contact}`);
-    setName("");
-    setContact("");
+    console.log("Reading pitch from context in popup:", Pitchdetails);
+
     onClose(); // Close the modal
   };
 
-  if (!show) return null; // Don't render modal if show is false
+  // Safely construct the booking data
+  const data = {
+    teamName: bookerInfo?.name || "",
+    pitchId: Pitchdetails?._id || "",
+    email: bookerInfo?.email || "",
+    phoneNumber: bookerInfo?.contact || "",
+    duration: 2,
+    totalCost: Pitchdetails?.pricePerHour || 0,
+    date: selectedDate || "",
+    startTime: "05:00",
+  };
+
+  const triggerApi = async () => {
+    try {
+      console.log("Booking data being sent:", data);
+      const res = await PostData(data, "/api/bookings");
+      alert("Booking successful");
+      console.log(res);
+    } catch (err) {
+      console.error("Booking failed:", err);
+      alert("Booking failed");
+    }
+  };
+
+  if (!show) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -20,19 +45,35 @@ const PopUpForm = ({ show, onClose }) => {
         <input
           type="text"
           placeholder="Your Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 mb-3 border border-gray-300 rounded"
+          value={bookerInfo?.name || ""}
+          onChange={(e) =>
+            setBookerInfo({ ...bookerInfo, name: e.target.value })
+          }
+          className="w-full p-2 mb-2 text-sm border border-gray-300 rounded"
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          value={bookerInfo?.email || ""}
+          onChange={(e) =>
+            setBookerInfo({ ...bookerInfo, email: e.target.value })
+          }
+          className="w-full p-2 mb-2 border text-sm border-gray-300 rounded"
         />
         <input
           type="text"
           placeholder="Contact Info"
-          value={contact}
-          onChange={(e) => setContact(e.target.value)}
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
+          value={bookerInfo?.contact || ""}
+          onChange={(e) =>
+            setBookerInfo({ ...bookerInfo, contact: e.target.value })
+          }
+          className="w-full p-2 mb-4 border text-sm border-gray-300 rounded"
         />
         <button
-          onClick={handleSubmit}
+          onClick={() => {
+            handleSubmit();
+            triggerApi();
+          }}
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
         >
           Submit

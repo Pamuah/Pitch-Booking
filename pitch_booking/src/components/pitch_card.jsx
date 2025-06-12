@@ -11,7 +11,7 @@ const CustomCard = ({
   onBookClick,
 }) => {
   return (
-    <div className="bg-black opacity-70 rounded-xl shadow-md p-2 flex gap-2 items-center w-full hover:shadow-lg transition-shadow duration-300">
+    <div className="bg-gray-600 rounded-xl shadow-md p-2 flex gap-2 items-center w-full hover:shadow-lg transition-shadow duration-300">
       {/* Image */}
       <img
         src={imageSrc}
