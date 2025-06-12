@@ -38,7 +38,7 @@ const CustomCard = ({
             Book
           </button>
         ) : null}
-        <span className="bg-gray-200 text-black font-normal px-2 py-1 rounded-full text-sm">
+        <span className="bg-gray-200 text-black font-normal px-2 py-1 rounded-md text-sm">
           {price}
         </span>
       </div>

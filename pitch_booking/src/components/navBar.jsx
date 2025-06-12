@@ -6,7 +6,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 const Header = () => {
   return (
-    <div className="flex flex-row items-center bg-white shadow-xl sticky top-0 z-20 h-16 w-full rounded-lg px-6 py-2 justify-between">
+    <div className="flex flex-col md:flex-row items-center gap-y-4 bg-white shadow-xl sticky top-0 z-20 md:h-16 w-full rounded-lg px-6 py-2 justify-between">
       {/* Left - Logo */}
       <div className="flex-1">
         <h1 className="font-bold text-2xl">PitchBooking</h1>

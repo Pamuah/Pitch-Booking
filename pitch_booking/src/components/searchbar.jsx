@@ -9,7 +9,13 @@ function SearchBar() {
       <input
         type="text"
         placeholder="📍 Location"
-        className="bg-transparent text-sm font-medium outline-none text-gray-600 px-2 flex-1"
+        className="bg-transparent  md:text-sm font-medium outline-none text-gray-600 px-2 flex-1 hidden md:flex"
+      />
+
+      <input
+        type="text"
+        placeholder="Location"
+        className="bg-transparent text-xs font-normal outline-none text-gray-600 px-2 flex-1 md:hidden"
       />
 
       {/* Divider (optional) */}
