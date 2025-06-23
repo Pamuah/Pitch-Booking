@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ArrowLeft, User } from "lucide-react";
+import { PostData } from "../api services/post_service";
 
 const AdminLoginPage = () => {
   const [view, setView] = useState("initial");
@@ -12,45 +13,132 @@ const AdminLoginPage = () => {
     telCode: "",
     telNumber: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const number = `+${formData.telCode}${formData.telNumber}`;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleAuth = (e) => {
+  const handleAuth = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    setTimeout(() => {
-      if (view === "login") {
-        if (formData.email === "pitch@owner.com" && formData.password === "admin123") {
+    if (view === "login") {
+      try {
+        const loginData = {
+          email: formData.email,
+          password: formData.password,
+        };
+
+        const response = await PostData(loginData, "/api/auth/login");
+
+        if (response.token) {
+          localStorage.setItem("token", response.token);
+          console.log("Login token saved");
           alert("Login Successful");
           window.location.href = "/admindashboard";
         } else {
-          setError("Invalid credentials");
+          setError("Login failed: No token received.");
         }
-      } else {
-        alert("Account created");
-        setView("login");
+      } catch (err) {
+        console.error("Login error:", err);
+        setError("Login failed. Please check your credentials and try again.");
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    }, 1000);
+    }
+
+    // Only executes if view !== "login"
+    else if (view === "signup") {
+      if (!validateSignup()) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const signupData = {
+          firstname: formData.firstName,
+          lastname: formData.lastName,
+          email: formData.email,
+          country: formData.country,
+          dateOfBirth: formData.dob,
+          phoneNumber: number,
+          password: formData.password,
+        };
+
+        const response = await PostData(signupData, "/api/auth/signup");
+
+        console.log("Signup successful:", response);
+        if (response.token) {
+          localStorage.setItem("token", response.token);
+          console.log("Token saved");
+        } else {
+          console.log("no token found");
+        }
+        alert("Account created successfully");
+        setView("login");
+      } catch (err) {
+        setError("Signup failed. Please try again.");
+        console.error("Signup error:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const validateSignup = () => {
+    const {
+      firstName,
+      lastName,
+      email,
+      country,
+      dob,
+      telCode,
+      telNumber,
+      password,
+      confirmPassword,
+    } = formData;
+
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !country ||
+      !dob ||
+      !telCode ||
+      !telNumber ||
+      !password ||
+      !confirmPassword
+    ) {
+      setError("Please fill in all the fields.");
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return false;
+    }
+
+    return true;
   };
 
   const renderInitial = () => (
     <div className="min-h-screen flex flex-col">
       {/* Header - fixed height */}
       <header className="bg-white shadow-md p-4">
-        <h1 className="text-2xl font-bold text-black" style={{ fontFamily: "'Nunito Sans', sans-serif" }}>
+        <h1
+          className="text-2xl font-bold text-black"
+          style={{ fontFamily: "'Nunito Sans', sans-serif" }}
+        >
           Pitch Booking
         </h1>
       </header>
@@ -58,13 +146,13 @@ const AdminLoginPage = () => {
       {/* Main content - takes remaining space */}
       <div className="flex-1 flex flex-col md:flex-row">
         {/* Left section with curved edge */}
-        <div 
+        <div
           className="w-full md:w-3/5 h-64 md:h-auto relative overflow-hidden"
           style={{
             clipPath: "polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%)",
             backgroundImage: 'url("/signup.jpg")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         >
           <div className="absolute inset-0 bg-black/30 z-10" />
@@ -82,9 +170,11 @@ const AdminLoginPage = () => {
                 <User size={40} className="text-green-400" />
               </div>
             </div>
-            
-            <h1 className="text-2xl font-bold text-center mb-6">Welcome to PitchBooking</h1>
-            
+
+            <h1 className="text-2xl font-bold text-center mb-6">
+              Welcome to PitchBooking
+            </h1>
+
             <div className="flex flex-col gap-7">
               <button
                 className="w-full bg-black hover:bg-green-400 text-white py-2 px-4 rounded-md font-large"
@@ -92,7 +182,7 @@ const AdminLoginPage = () => {
               >
                 Create Account
               </button>
-              
+
               <button
                 className="w-full bg-gray-300 hover:bg-green-400 text-black py-2 px-4 rounded-md font-large"
                 onClick={() => setView("login")}
@@ -109,19 +199,22 @@ const AdminLoginPage = () => {
   const renderAuthForm = () => (
     <div className="min-h-screen flex flex-col">
       <header className="bg-white shadow-sm p-4">
-        <h1 className="text-2xl font-bold text-black" style={{ fontFamily: "'Nunito Sans', sans-serif" }}>
+        <h1
+          className="text-2xl font-bold text-black"
+          style={{ fontFamily: "'Nunito Sans', sans-serif" }}
+        >
           Pitch Booking
         </h1>
       </header>
       <div className="flex-1 flex flex-col md:flex-row">
         {/* Left section with curved edge */}
-        <div 
+        <div
           className="w-full md:w-3/5 h-64 md:h-auto relative overflow-hidden"
           style={{
             clipPath: "polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%)",
             backgroundImage: 'url("/signup.jpg")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         >
           <div className="absolute inset-0 bg-black/30 z-10" />
@@ -129,16 +222,19 @@ const AdminLoginPage = () => {
 
         {/* Right section with form */}
         <div className="w-full md:w-2/5 bg-white flex justify-center items-center p-8">
-          <div 
+          <div
             tabIndex="0"
             className="bg-white rounded-xl p-8 w-full max-w-lg shadow-lg border-4 border-black focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-300 mr-40"
             style={{ fontFamily: "'Nunito Sans', sans-serif" }}
           >
             {/* Scrollable container for signup form with invisible scrollbar */}
-            <div className={`${view === "signup" ? "max-h-[500px] overflow-y-auto" : ""}`}
+            <div
+              className={`${
+                view === "signup" ? "max-h-[500px] overflow-y-auto" : ""
+              }`}
               style={{
-                scrollbarWidth: 'none', /* Firefox */
-                msOverflowStyle: 'none', /* IE/Edge */
+                scrollbarWidth: "none" /* Firefox */,
+                msOverflowStyle: "none" /* IE/Edge */,
               }}
             >
               {/* Hide scrollbar for Chrome/Safari */}
@@ -150,14 +246,14 @@ const AdminLoginPage = () => {
                 `}
               </style>
               <div className={`${view === "signup" ? "no-scrollbar" : ""}`}>
-                <button 
+                <button
                   onClick={() => setView("initial")}
                   className="flex items-center text-gray-700 hover:text-green-300 transition mb-6"
                 >
                   <ArrowLeft size={16} className="mr-1" />
                   <span>Back</span>
                 </button>
-                
+
                 <div className="flex flex-col items-center mb-6">
                   <div className="bg-green-200 rounded-full p-3 mb-3">
                     <User size={24} className="text-green-400" />
@@ -167,17 +263,24 @@ const AdminLoginPage = () => {
                   </h1>
                 </div>
 
-                {error && <p className="text-red-500 mb-4 text-sm text-center">{error}</p>}
-                
+                {error && (
+                  <p className="text-red-500 mb-4 text-sm text-center">
+                    {error}
+                  </p>
+                )}
+
                 <form onSubmit={handleAuth} className="space-y-4">
                   {view === "signup" && (
                     <>
                       <div className="flex gap-4">
                         <div className="w-1/2">
-                          <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="firstName"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             First Name
                           </label>
-                          <input 
+                          <input
                             id="firstName"
                             name="firstName"
                             type="text"
@@ -189,10 +292,13 @@ const AdminLoginPage = () => {
                           />
                         </div>
                         <div className="w-1/2">
-                          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="lastName"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             Last Name
                           </label>
-                          <input 
+                          <input
                             id="lastName"
                             name="lastName"
                             type="text"
@@ -207,7 +313,10 @@ const AdminLoginPage = () => {
 
                       <div className="flex gap-4">
                         <div className="w-1/2">
-                          <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="country"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             Country
                           </label>
                           <select
@@ -225,10 +334,13 @@ const AdminLoginPage = () => {
                           </select>
                         </div>
                         <div className="w-1/2">
-                          <label htmlFor="dob" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="dob"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             Date of Birth
                           </label>
-                          <input 
+                          <input
                             id="dob"
                             name="dob"
                             type="date"
@@ -242,7 +354,10 @@ const AdminLoginPage = () => {
 
                       <div className="flex gap-4">
                         <div className="w-2/5">
-                          <label htmlFor="telCode" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="telCode"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             Code
                           </label>
                           <select
@@ -260,10 +375,13 @@ const AdminLoginPage = () => {
                           </select>
                         </div>
                         <div className="w-3/5">
-                          <label htmlFor="telNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="telNumber"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             Phone Number
                           </label>
-                          <input 
+                          <input
                             id="telNumber"
                             name="telNumber"
                             type="tel"
@@ -279,10 +397,13 @@ const AdminLoginPage = () => {
                   )}
 
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       Email
                     </label>
-                    <input 
+                    <input
                       id="email"
                       name="email"
                       type="email"
@@ -295,10 +416,13 @@ const AdminLoginPage = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       {view === "signup" ? "Create Password" : "Password"}
                     </label>
-                    <input 
+                    <input
                       id="password"
                       name="password"
                       type="password"
@@ -306,16 +430,23 @@ const AdminLoginPage = () => {
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-300"
                       required
-                      placeholder={view === "signup" ? "Create a password" : "Enter your password"}
+                      placeholder={
+                        view === "signup"
+                          ? "Create a password"
+                          : "Enter your password"
+                      }
                     />
                   </div>
 
                   {view === "signup" && (
                     <div>
-                      <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                      <label
+                        htmlFor="confirmPassword"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
                         Confirm Password
                       </label>
-                      <input 
+                      <input
                         id="confirmPassword"
                         name="confirmPassword"
                         type="password"
@@ -336,37 +467,48 @@ const AdminLoginPage = () => {
                           id="remember"
                           className="h-4 w-4 text-green-300 focus:ring-green-300 border-gray-300 rounded"
                         />
-                        <label htmlFor="remember" className="text-sm text-gray-700">Remember me</label>
+                        <label
+                          htmlFor="remember"
+                          className="text-sm text-gray-700"
+                        >
+                          Remember me
+                        </label>
                       </div>
-                      <a href="#" className="text-sm text-green-300 hover:underline">
+                      <a
+                        href="#"
+                        className="text-sm text-green-300 hover:underline"
+                      >
                         Forgot password?
                       </a>
                     </div>
                   )}
 
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="w-full bg-green-300 hover:bg-green-500 text-black py-2 px-4 rounded-md font-medium mt-4"
                     disabled={loading}
+                    onClick={handleAuth}
                   >
-                    {loading 
-                      ? view === "signup" 
-                        ? "Creating account..." 
+                    {loading
+                      ? view === "signup"
+                        ? "Creating account..."
                         : "Logging in..."
-                      : view === "signup" 
-                        ? "Create Account" 
-                        : "Login"}
+                      : view === "signup"
+                      ? "Create Account"
+                      : "Login"}
                   </button>
-                  
+
                   <div className="text-center mt-4">
                     <p className="text-sm text-gray-600 mb-2">
-                      {view === "signup" 
-                        ? "Already have an account?" 
+                      {view === "signup"
+                        ? "Already have an account?"
                         : "Don't have an account?"}
                     </p>
                     <button
                       type="button"
-                      onClick={() => setView(view === "signup" ? "login" : "signup")}
+                      onClick={() =>
+                        setView(view === "signup" ? "login" : "signup")
+                      }
                       className="bg-black text-white px-4 py-2 rounded-md shadow-sm hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-1 font-medium text-sm"
                     >
                       {view === "signup" ? "Login" : "Create Account"}

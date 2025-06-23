@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import AdminLayout from "../components/AdminLayout";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Star,
-  Search,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, Star, Search } from "lucide-react";
 
 const ReviewsPage = () => {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -158,7 +153,10 @@ const ReviewsPage = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <Search className="absolute left-3 top-2.5 text-gray-400" size={16} />
+                <Search
+                  className="absolute left-3 top-2.5 text-gray-400"
+                  size={16}
+                />
               </div>
             </div>
 
@@ -226,7 +224,11 @@ const ReviewsPage = () => {
                         {review.date}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <span className={`font-medium ${getStatusColor(review.status)}`}>
+                        <span
+                          className={`font-medium ${getStatusColor(
+                            review.status
+                          )}`}
+                        >
                           {review.status}
                         </span>
                       </td>

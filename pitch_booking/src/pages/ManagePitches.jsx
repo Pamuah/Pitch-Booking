@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import AdminLayout from "../components/AdminLayout";
-import { 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Check, 
-  X, 
-  Calendar, 
-  Clock, 
-  Users, 
-  DollarSign, 
-  MapPin, 
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Check,
+  X,
+  Calendar,
+  Clock,
+  Users,
+  DollarSign,
+  MapPin,
   Image as ImageIcon,
-  Upload
+  Upload,
 } from "lucide-react";
 
 const ManagePitches = () => {
@@ -28,8 +28,9 @@ const ManagePitches = () => {
       hourlyRate: 120,
       availability: "8:00 AM - 10:00 PM",
       features: ["Floodlights", "Changing Rooms", "Spectator Area"],
-      image: "https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80",
-      status: "Available"
+      image:
+        "https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80",
+      status: "Available",
     },
     {
       id: 2,
@@ -40,8 +41,9 @@ const ManagePitches = () => {
       hourlyRate: 60,
       availability: "8:00 AM - 11:00 PM",
       features: ["Floodlights", "Indoor"],
-      image: "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
-      status: "In Use"
+      image:
+        "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
+      status: "In Use",
     },
     {
       id: 3,
@@ -52,9 +54,10 @@ const ManagePitches = () => {
       hourlyRate: 80,
       availability: "9:00 AM - 10:00 PM",
       features: ["Floodlights", "Changing Rooms"],
-      image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1293&q=80",
-      status: "Maintenance"
-    }
+      image:
+        "https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1293&q=80",
+      status: "Maintenance",
+    },
   ]);
   const [newPitch, setNewPitch] = useState({
     name: "",
@@ -65,7 +68,7 @@ const ManagePitches = () => {
     availability: "8:00 AM - 10:00 PM",
     features: [],
     image: "",
-    status: "Available"
+    status: "Available",
   });
 
   const handleAddPitch = () => {
@@ -79,21 +82,23 @@ const ManagePitches = () => {
       availability: "8:00 AM - 10:00 PM",
       features: [],
       image: "",
-      status: "Available"
+      status: "Available",
     });
     setShowAddPitchForm(false);
   };
 
   const handleEditPitch = (id) => {
     setEditingPitchId(id);
-    const pitchToEdit = pitches.find(pitch => pitch.id === id);
+    const pitchToEdit = pitches.find((pitch) => pitch.id === id);
     setNewPitch({ ...pitchToEdit });
   };
 
   const handleUpdatePitch = () => {
-    setPitches(pitches.map(pitch => 
-      pitch.id === editingPitchId ? { ...newPitch } : pitch
-    ));
+    setPitches(
+      pitches.map((pitch) =>
+        pitch.id === editingPitchId ? { ...newPitch } : pitch
+      )
+    );
     setEditingPitchId(null);
     setNewPitch({
       name: "",
@@ -104,24 +109,24 @@ const ManagePitches = () => {
       availability: "8:00 AM - 10:00 PM",
       features: [],
       image: "",
-      status: "Available"
+      status: "Available",
     });
   };
 
   const handleDeletePitch = (id) => {
-    setPitches(pitches.filter(pitch => pitch.id !== id));
+    setPitches(pitches.filter((pitch) => pitch.id !== id));
   };
 
   const handleFeatureToggle = (feature) => {
     if (newPitch.features.includes(feature)) {
       setNewPitch({
         ...newPitch,
-        features: newPitch.features.filter(f => f !== feature)
+        features: newPitch.features.filter((f) => f !== feature),
       });
     } else {
       setNewPitch({
         ...newPitch,
-        features: [...newPitch.features, feature]
+        features: [...newPitch.features, feature],
       });
     }
   };
@@ -146,7 +151,9 @@ const ManagePitches = () => {
         <aside className="w-64 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-auto">
           <div className="p-4">
             <div className="mb-6">
-              <p className="text-xs uppercase text-gray-500 font-semibold mb-2">Pitch Management</p>
+              <p className="text-xs uppercase text-gray-500 font-semibold mb-2">
+                Pitch Management
+              </p>
               <nav className="space-y-1">
                 <button
                   onClick={() => setShowAddPitchForm(true)}
@@ -171,7 +178,9 @@ const ManagePitches = () => {
             </div>
 
             <div className="mb-6">
-              <p className="text-xs uppercase text-gray-500 font-semibold mb-2">Maintenance</p>
+              <p className="text-xs uppercase text-gray-500 font-semibold mb-2">
+                Maintenance
+              </p>
               <nav className="space-y-1">
                 <button className="flex items-center w-full p-2 rounded-lg text-gray-600 hover:bg-gray-100">
                   <Calendar size={18} className="mr-3" />
@@ -185,7 +194,7 @@ const ManagePitches = () => {
             </div>
           </div>
         </aside>
-        
+
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
           <div className="p-6">
@@ -215,7 +224,9 @@ const ManagePitches = () => {
                       <input
                         type="text"
                         value={newPitch.name}
-                        onChange={(e) => setNewPitch({ ...newPitch, name: e.target.value })}
+                        onChange={(e) =>
+                          setNewPitch({ ...newPitch, name: e.target.value })
+                        }
                         className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
                         placeholder="e.g. Main Pitch"
                       />
@@ -227,7 +238,9 @@ const ManagePitches = () => {
                       </label>
                       <select
                         value={newPitch.type}
-                        onChange={(e) => setNewPitch({ ...newPitch, type: e.target.value })}
+                        onChange={(e) =>
+                          setNewPitch({ ...newPitch, type: e.target.value })
+                        }
                         className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
                       >
                         <option value="5-a-side">5-a-side</option>
@@ -238,29 +251,19 @@ const ManagePitches = () => {
 
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Surface Type
-                      </label>
-                      <select
-                        value={newPitch.surface}
-                        onChange={(e) => setNewPitch({ ...newPitch, surface: e.target.value })}
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
-                      >
-                        <option value="Artificial Turf">Artificial Turf</option>
-                        <option value="Natural Grass">Natural Grass</option>
-                        <option value="Indoor">Indoor</option>
-                      </select>
-                    </div>
-
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Dimensions
+                        Location
                       </label>
                       <input
                         type="text"
                         value={newPitch.dimensions}
-                        onChange={(e) => setNewPitch({ ...newPitch, dimensions: e.target.value })}
+                        onChange={(e) =>
+                          setNewPitch({
+                            ...newPitch,
+                            dimensions: e.target.value,
+                          })
+                        }
                         className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
-                        placeholder="e.g. 40m x 20m"
+                        placeholder="e.g. Ablekuma"
                       />
                     </div>
                   </div>
@@ -273,7 +276,12 @@ const ManagePitches = () => {
                       <input
                         type="number"
                         value={newPitch.hourlyRate}
-                        onChange={(e) => setNewPitch({ ...newPitch, hourlyRate: e.target.value })}
+                        onChange={(e) =>
+                          setNewPitch({
+                            ...newPitch,
+                            hourlyRate: e.target.value,
+                          })
+                        }
                         className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
                         placeholder="e.g. 60"
                       />
@@ -281,42 +289,15 @@ const ManagePitches = () => {
 
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Availability
+                        Add Image of Pitch
                       </label>
                       <input
-                        type="text"
-                        value={newPitch.availability}
-                        onChange={(e) => setNewPitch({ ...newPitch, availability: e.target.value })}
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
-                        placeholder="e.g. 8:00 AM - 10:00 PM"
-                      />
-                    </div>
-
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Status
-                      </label>
-                      <select
-                        value={newPitch.status}
-                        onChange={(e) => setNewPitch({ ...newPitch, status: e.target.value })}
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
-                      >
-                        <option value="Available">Available</option>
-                        <option value="In Use">In Use</option>
-                        <option value="Maintenance">Maintenance</option>
-                      </select>
-                    </div>
-
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Image URL
-                      </label>
-                      <input
-                        type="text"
+                        type="file"
                         value={newPitch.image}
-                        onChange={(e) => setNewPitch({ ...newPitch, image: e.target.value })}
+                        onChange={(e) =>
+                          setNewPitch({ ...newPitch, image: e.target.value })
+                        }
                         className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
-                        placeholder="Enter image URL"
                       />
                     </div>
                   </div>
@@ -327,7 +308,14 @@ const ManagePitches = () => {
                     Features
                   </label>
                   <div className="flex flex-wrap gap-2">
-                    {["Floodlights", "Changing Rooms", "Spectator Area", "Indoor", "Parking", "Equipment Rental"].map((feature) => (
+                    {[
+                      "Floodlights",
+                      "Changing Rooms",
+                      "Spectator Area",
+                      "Indoor",
+                      "Parking",
+                      "Equipment Rental",
+                    ].map((feature) => (
                       <button
                         key={feature}
                         type="button"
@@ -355,7 +343,9 @@ const ManagePitches = () => {
                     Cancel
                   </button>
                   <button
-                    onClick={editingPitchId ? handleUpdatePitch : handleAddPitch}
+                    onClick={
+                      editingPitchId ? handleUpdatePitch : handleAddPitch
+                    }
                     className="px-4 py-2 bg-green-300 rounded text-black hover:bg-green-400"
                   >
                     {editingPitchId ? "Update Pitch" : "Add Pitch"}
@@ -370,22 +360,40 @@ const ManagePitches = () => {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Pitch
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Type
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Surface
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Hourly Rate
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Status
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Actions
                       </th>
                     </tr>
@@ -397,16 +405,27 @@ const ManagePitches = () => {
                           <div className="flex items-center">
                             <div className="h-10 w-10 rounded-md overflow-hidden flex-shrink-0">
                               {pitch.image ? (
-                                <img src={pitch.image} alt={pitch.name} className="h-full w-full object-cover" />
+                                <img
+                                  src={pitch.image}
+                                  alt={pitch.name}
+                                  className="h-full w-full object-cover"
+                                />
                               ) : (
                                 <div className="h-full w-full bg-gray-200 flex items-center justify-center">
-                                  <ImageIcon size={16} className="text-gray-400" />
+                                  <ImageIcon
+                                    size={16}
+                                    className="text-gray-400"
+                                  />
                                 </div>
                               )}
                             </div>
                             <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">{pitch.name}</div>
-                              <div className="text-sm text-gray-500">{pitch.dimensions}</div>
+                              <div className="text-sm font-medium text-gray-900">
+                                {pitch.name}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {pitch.dimensions}
+                              </div>
                             </div>
                           </div>
                         </td>
@@ -420,7 +439,11 @@ const ManagePitches = () => {
                           £{pitch.hourlyRate}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(pitch.status)}`}>
+                          <span
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+                              pitch.status
+                            )}`}
+                          >
                             {pitch.status}
                           </span>
                         </td>
