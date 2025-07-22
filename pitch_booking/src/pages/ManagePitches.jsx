@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AdminLayout from "../components/AdminLayout";
+import { PostData } from "../api services/post_service";
+import { sendControlData } from "../api services/get_service";
+import { patchData } from "../api services/patch_service";
+import { deleteData } from "../api services/delete_service";
 import {
   Plus,
   Edit,
@@ -18,103 +22,179 @@ import {
 const ManagePitches = () => {
   const [showAddPitchForm, setShowAddPitchForm] = useState(false);
   const [editingPitchId, setEditingPitchId] = useState(null);
-  const [pitches, setPitches] = useState([
-    {
-      id: 1,
-      name: "Main Pitch",
-      type: "11-a-side",
-      surface: "Natural Grass",
-      dimensions: "105m x 68m",
-      hourlyRate: 120,
-      availability: "8:00 AM - 10:00 PM",
-      features: ["Floodlights", "Changing Rooms", "Spectator Area"],
-      image:
-        "https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80",
-      status: "Available",
-    },
-    {
-      id: 2,
-      name: "Pitch A",
-      type: "5-a-side",
-      surface: "Artificial Turf",
-      dimensions: "40m x 20m",
-      hourlyRate: 60,
-      availability: "8:00 AM - 11:00 PM",
-      features: ["Floodlights", "Indoor"],
-      image:
-        "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
-      status: "In Use",
-    },
-    {
-      id: 3,
-      name: "Pitch B",
-      type: "7-a-side",
-      surface: "Artificial Turf",
-      dimensions: "60m x 40m",
-      hourlyRate: 80,
-      availability: "9:00 AM - 10:00 PM",
-      features: ["Floodlights", "Changing Rooms"],
-      image:
-        "https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1293&q=80",
-      status: "Maintenance",
-    },
-  ]);
+  const [pitches, setPitches] = useState([]);
   const [newPitch, setNewPitch] = useState({
     name: "",
     type: "5-a-side",
-    surface: "Artificial Turf",
-    dimensions: "",
-    hourlyRate: "",
-    availability: "8:00 AM - 10:00 PM",
+    location: "",
+    pricePerHour: "",
     features: [],
-    image: "",
-    status: "Available",
+    startTime: "08:00",
+    closingTime: "22:00",
+    image: null,
   });
 
-  const handleAddPitch = () => {
-    setPitches([...pitches, { ...newPitch, id: Date.now() }]);
-    setNewPitch({
-      name: "",
-      type: "5-a-side",
-      surface: "Artificial Turf",
-      dimensions: "",
-      hourlyRate: "",
-      availability: "8:00 AM - 10:00 PM",
-      features: [],
-      image: "",
-      status: "Available",
+  const getMyPitches = async () => {
+    try {
+      const response = await sendControlData({}, "/api/owner/my-pitches", true);
+      console.log("Owner's pitches:", response.data);
+      // setting the response data to the pitches state to print out in the UI
+      setPitches(response.data);
+    } catch (err) {
+      console.error("Failed to fetch pitches:", err.message);
+    }
+  };
+
+  useEffect(() => {
+    getMyPitches();
+  }, []);
+
+  //ADD new pitches
+  const SubmitNewPitches = async () => {
+    const formData = new FormData();
+
+    formData.append("name", newPitch.name);
+    formData.append("location", newPitch.location);
+    formData.append("type", newPitch.type);
+    formData.append("pricePerHour", newPitch.hourlyRate);
+    formData.append("openingTime", newPitch.startTime);
+    formData.append("closingTime", newPitch.closingTime);
+
+    if (newPitch.image instanceof File) {
+      formData.append("image", newPitch.image);
+    } else {
+      console.warn("Image is not a valid file.");
+    }
+
+    newPitch.features.forEach((feature) => {
+      formData.append("features", feature);
     });
-    setShowAddPitchForm(false);
+
+    try {
+      const response = await PostData(formData, "/api/pitches", true);
+      console.log("Pitch submitted:", response);
+      alert("Pitch submitted successfully!");
+    } catch (error) {
+      console.error("Submission failed:", error);
+      alert("Submission failed. Please try again.");
+    }
+  };
+
+  // Get Pitches
+  const SubmitGetPitches = async () => {
+    try {
+      const res = await sendControlData(
+        { someParam: "value" },
+        "/api/owner/my-pitches",
+        true
+      );
+      setPitches(res.data);
+    } catch (err) {
+      console.error("Failed to fetch pitches:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEditPitch = (id) => {
     setEditingPitchId(id);
-    const pitchToEdit = pitches.find((pitch) => pitch.id === id);
-    setNewPitch({ ...pitchToEdit });
-  };
+    const pitchToEdit = pitches.find((pitch) => pitch._id === id);
 
-  const handleUpdatePitch = () => {
-    setPitches(
-      pitches.map((pitch) =>
-        pitch.id === editingPitchId ? { ...newPitch } : pitch
-      )
-    );
-    setEditingPitchId(null);
+    if (!pitchToEdit) return;
+
     setNewPitch({
-      name: "",
-      type: "5-a-side",
-      surface: "Artificial Turf",
-      dimensions: "",
-      hourlyRate: "",
-      availability: "8:00 AM - 10:00 PM",
-      features: [],
+      id: pitchToEdit._id || "",
+      name: pitchToEdit.name || "",
+      type: pitchToEdit.type || "",
+      location: pitchToEdit.location || "",
+      features: pitchToEdit.features || [],
+      pricePerHour: pitchToEdit.pricePerHour || "",
+      openingTime: pitchToEdit.openingTime || "08:00",
+      closingTime: pitchToEdit.closingTime || "22:00",
       image: "",
-      status: "Available",
     });
+
+    setShowAddPitchForm(true);
   };
 
-  const handleDeletePitch = (id) => {
-    setPitches(pitches.filter((pitch) => pitch.id !== id));
+  // Update Pitches
+  const handleUpdatePitch = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const formData = createFormDataFromPitch(newPitch);
+
+      const result = await patchData(
+        `/api/pitches/${editingPitchId}`,
+        formData,
+        token,
+        true // indicates multipart/form-data
+      );
+
+      const { data: updatedPitchData } = result;
+
+      console.log("Pitch updated successfully:", updatedPitchData);
+
+      // Updating local UI
+      setPitches(
+        pitches.map((pitch) =>
+          pitch._id === editingPitchId ? { ...updatedPitchData } : pitch
+        )
+      );
+
+      // Resetting the form
+      setEditingPitchId(null);
+      setNewPitch({
+        name: "",
+        type: "5-a-side",
+        surface: "Artificial Turf",
+        dimensions: "",
+        hourlyRate: "",
+        availability: "8:00 AM - 10:00 PM",
+        features: [],
+        image: "",
+        status: "Available",
+      });
+    } catch (error) {
+      console.error("Update failed:", error.message);
+    }
+  };
+
+  const createFormDataFromPitch = (pitch) => {
+    const formData = new FormData();
+    formData.append("name", pitch.name);
+    formData.append("type", pitch.type);
+    formData.append("location", pitch.location || "");
+    formData.append("openingTime", pitch.openingTime || "");
+    formData.append("closingTime", pitch.closingTime || "");
+    formData.append("pricePerHour", pitch.pricePerHour || "");
+
+    (pitch.features || []).forEach((feature) => {
+      formData.append("features[]", feature);
+    });
+
+    if (pitch.image && typeof pitch.image === "object") {
+      formData.append("image", pitch.image);
+    }
+
+    return formData;
+  };
+
+  //Deleting pitches
+  const handleDeletePitch = async (pitchId) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      await deleteData(`/api/pitches/${pitchId}`, token);
+      console.log("Pitch deleted successfully");
+      alert("Pitch deleted successfully");
+
+      // Update UI
+      setPitches((prev) => prev.filter((pitch) => pitch._id !== pitchId));
+    } catch (error) {
+      console.error("Delete failed:", error.message);
+      alert("Delete failed. Please try again.");
+    }
   };
 
   const handleFeatureToggle = (feature) => {
@@ -128,19 +208,6 @@ const ManagePitches = () => {
         ...newPitch,
         features: [...newPitch.features, feature],
       });
-    }
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Available":
-        return "bg-green-100 text-green-800";
-      case "In Use":
-        return "bg-blue-100 text-blue-800";
-      case "Maintenance":
-        return "bg-yellow-100 text-yellow-800";
-      default:
-        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -223,7 +290,7 @@ const ManagePitches = () => {
                       </label>
                       <input
                         type="text"
-                        value={newPitch.name}
+                        value={newPitch.name || ""}
                         onChange={(e) =>
                           setNewPitch({ ...newPitch, name: e.target.value })
                         }
@@ -237,7 +304,7 @@ const ManagePitches = () => {
                         Pitch Type
                       </label>
                       <select
-                        value={newPitch.type}
+                        value={newPitch.type || ""}
                         onChange={(e) =>
                           setNewPitch({ ...newPitch, type: e.target.value })
                         }
@@ -255,11 +322,11 @@ const ManagePitches = () => {
                       </label>
                       <input
                         type="text"
-                        value={newPitch.dimensions}
+                        value={newPitch.location || ""}
                         onChange={(e) =>
                           setNewPitch({
                             ...newPitch,
-                            dimensions: e.target.value,
+                            location: e.target.value,
                           })
                         }
                         className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
@@ -275,11 +342,11 @@ const ManagePitches = () => {
                       </label>
                       <input
                         type="number"
-                        value={newPitch.hourlyRate}
+                        value={newPitch.pricePerHour || ""}
                         onChange={(e) =>
                           setNewPitch({
                             ...newPitch,
-                            hourlyRate: e.target.value,
+                            pricePerHour: e.target.value,
                           })
                         }
                         className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
@@ -293,9 +360,47 @@ const ManagePitches = () => {
                       </label>
                       <input
                         type="file"
-                        value={newPitch.image}
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            setNewPitch((prev) => ({ ...prev, image: file }));
+                          }
+                        }}
+                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Opening Time
+                      </label>
+                      <input
+                        type="time"
+                        value={newPitch.openingTime || ""}
                         onChange={(e) =>
-                          setNewPitch({ ...newPitch, image: e.target.value })
+                          setNewPitch({
+                            ...newPitch,
+                            openingTime: e.target.value,
+                          })
+                        }
+                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Closing Time
+                      </label>
+                      <input
+                        type="time"
+                        value={newPitch.closingTime || ""}
+                        onChange={(e) =>
+                          setNewPitch({
+                            ...newPitch,
+                            closingTime: e.target.value,
+                          })
                         }
                         className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
                       />
@@ -309,12 +414,11 @@ const ManagePitches = () => {
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {[
-                      "Floodlights",
-                      "Changing Rooms",
-                      "Spectator Area",
-                      "Indoor",
-                      "Parking",
-                      "Equipment Rental",
+                      "floodlights",
+                      "lockerRooms",
+                      "parking",
+                      "stands",
+                      "wifi",
                     ].map((feature) => (
                       <button
                         key={feature}
@@ -344,7 +448,7 @@ const ManagePitches = () => {
                   </button>
                   <button
                     onClick={
-                      editingPitchId ? handleUpdatePitch : handleAddPitch
+                      editingPitchId ? handleUpdatePitch : SubmitNewPitches
                     }
                     className="px-4 py-2 bg-green-300 rounded text-black hover:bg-green-400"
                   >
@@ -376,7 +480,7 @@ const ManagePitches = () => {
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Surface
+                        Availability
                       </th>
                       <th
                         scope="col"
@@ -400,7 +504,7 @@ const ManagePitches = () => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {pitches.map((pitch) => (
-                      <tr key={pitch.id}>
+                      <tr key={pitch._id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="h-10 w-10 rounded-md overflow-hidden flex-shrink-0">
@@ -424,7 +528,7 @@ const ManagePitches = () => {
                                 {pitch.name}
                               </div>
                               <div className="text-sm text-gray-500">
-                                {pitch.dimensions}
+                                {pitch.location}
                               </div>
                             </div>
                           </div>
@@ -433,30 +537,30 @@ const ManagePitches = () => {
                           {pitch.type}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {pitch.surface}
+                          {pitch.openingTime}-{pitch.closingTime}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          £{pitch.hourlyRate}
+                          £{pitch.pricePerHour}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span
+                          {/* <span
                             className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
                               pitch.status
                             )}`}
                           >
                             {pitch.status}
-                          </span>
+                          </span> */}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-2">
                             <button
-                              onClick={() => handleEditPitch(pitch.id)}
+                              onClick={() => handleEditPitch(pitch._id)}
                               className="text-blue-600 hover:text-blue-900"
                             >
                               <Edit size={16} />
                             </button>
                             <button
-                              onClick={() => handleDeletePitch(pitch.id)}
+                              onClick={() => handleDeletePitch(pitch._id)}
                               className="text-red-600 hover:text-red-900"
                             >
                               <Trash2 size={16} />
