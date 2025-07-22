@@ -9,6 +9,7 @@ import ManagePitches from "./pages/ManagePitches";
 import BookingsPage from "./pages/BookingsPage";
 import ReviewsPage from "./pages/ReviewsPage";
 import SettingsPage from "./pages/SettingsPage";
+import MainAdminLoginPage from "./pages/mainadminloginpage";
 
 import { GlobalContextProvider } from "./context/global_context";
 
@@ -28,6 +29,7 @@ function App() {
           <Route path="/admin/bookings" element={<BookingsPage />} />
           <Route path="/admin/reviews" element={<ReviewsPage />} />
           <Route path="/admin/settings" element={<SettingsPage />} />
+           <Route path="/mainadminlogin" element={<MainAdminLoginPage />} />
         </Routes>
       </GlobalContextProvider>
     </Router>
