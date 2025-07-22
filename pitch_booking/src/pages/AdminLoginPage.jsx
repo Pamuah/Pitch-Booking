@@ -80,7 +80,7 @@ const AdminLoginPage = () => {
         console.log("Signup successful:", response);
         if (response.token) {
           localStorage.setItem("token", response.token);
-          console.log("Token saved");
+          console.log("Token saved: ", response.token);
         } else {
           console.log("no token found");
         }
