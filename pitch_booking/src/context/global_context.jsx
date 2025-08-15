@@ -11,12 +11,21 @@ export const GlobalContextProvider = ({ children }) => {
   });
 
   const [selectedDate, setSelectedDate] = useState();
-
+  const [selectedTime, setSelectedTime] = useState();
   const [Pitchdetails, setPitchdetails] = useState();
 
   return (
     <globalContext.Provider
-      value={{ bookerInfo, setBookerInfo, Pitchdetails, setPitchdetails, selectedDate, setSelectedDate }}
+      value={{
+        bookerInfo,
+        setBookerInfo,
+        Pitchdetails,
+        setPitchdetails,
+        selectedDate,
+        setSelectedDate,
+        selectedTime,
+        setSelectedTime,
+      }}
     >
       {children}
     </globalContext.Provider>

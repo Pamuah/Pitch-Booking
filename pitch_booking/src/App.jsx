@@ -10,7 +10,7 @@ import BookingsPage from "./pages/BookingsPage";
 import ReviewsPage from "./pages/ReviewsPage";
 import SettingsPage from "./pages/SettingsPage";
 import MainAdminLoginPage from "./pages/mainadminloginpage";
-
+import PaymentSuccess from "./pages/success_payment";
 import { GlobalContextProvider } from "./context/global_context";
 
 function App() {
@@ -29,7 +29,8 @@ function App() {
           <Route path="/admin/bookings" element={<BookingsPage />} />
           <Route path="/admin/reviews" element={<ReviewsPage />} />
           <Route path="/admin/settings" element={<SettingsPage />} />
-           <Route path="/mainadminlogin" element={<MainAdminLoginPage />} />
+          <Route path="/mainadminlogin" element={<MainAdminLoginPage />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
         </Routes>
       </GlobalContextProvider>
     </Router>

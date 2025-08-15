@@ -3,16 +3,14 @@ import { useGlobalContext } from "../context/global_context";
 import { PostData } from "../api services/post_service";
 
 const PopUpForm = ({ show, onClose }) => {
-  const { bookerInfo, setBookerInfo, Pitchdetails, selectedDate } =
-    useGlobalContext();
+  const {
+    bookerInfo,
+    setBookerInfo,
+    Pitchdetails,
+    selectedDate,
+    selectedTime,
+  } = useGlobalContext();
 
-  const handleSubmit = () => {
-    console.log("Reading pitch from context in popup:", Pitchdetails);
-
-    onClose(); // Close the modal
-  };
-
-  // Safely construct the booking data
   const data = {
     teamName: bookerInfo?.name || "",
     pitchId: Pitchdetails?._id || "",
@@ -21,18 +19,30 @@ const PopUpForm = ({ show, onClose }) => {
     duration: 2,
     totalCost: Pitchdetails?.pricePerHour || 0,
     date: selectedDate || "",
-    startTime: "05:00",
+    startTime: selectedTime || "",
   };
 
   const triggerApi = async () => {
     try {
       console.log("Booking data being sent:", data);
-      const res = await PostData(data, "/api/bookings");
-      alert("Booking successful");
-      console.log(res);
+      const response = await PostData(data, "/api/bookings");
+
+      const success = response.success;
+      const message = response.message;
+      const paymentUrl = response.paymentUrl;
+
+      console.log("Booking response:", response, success, message, paymentUrl);
+
+      if (success && paymentUrl) {
+        console.log("Booking success. Redirecting to:", paymentUrl);
+        onClose(); // Close modal before redirecting
+        window.location.href = paymentUrl; // Redirect to Paystack
+      } else {
+        alert("Booking failed: " + message);
+      }
     } catch (err) {
       console.error("Booking failed:", err);
-      alert("Booking failed");
+      alert("Booking failed. Please try again.");
     }
   };
 
@@ -71,7 +81,6 @@ const PopUpForm = ({ show, onClose }) => {
         />
         <button
           onClick={() => {
-            handleSubmit();
             triggerApi();
           }}
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"

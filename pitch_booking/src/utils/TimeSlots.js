@@ -1,0 +1,88 @@
+const timeSlots = [
+  {
+    id: 1,
+    startTime: "00:00",
+    endTime: "02:00",
+    minutesPerBooking: "2hrs/120mins",
+    amount: "400.00 GHC",
+  },
+  {
+    id: 2,
+    startTime: "02:00",
+    endTime: "04:00",
+    minutesPerBooking: "2hrs/120mins",
+    amount: "400.00 GHC",
+  },
+  {
+    id: 3,
+    startTime: "04:00",
+    endTime: "06:00",
+    minutesPerBooking: "2hrs/120mins",
+    amount: "400.00 GHC",
+  },
+  {
+    id: 4,
+    startTime: "06:00",
+    endTime: "08:00",
+    minutesPerBooking: "2hrs/120mins",
+    amount: "400.00 GHC",
+  },
+  {
+    id: 5,
+    startTime: "08:00",
+    endTime: "10:00",
+    minutesPerBooking: "2hrs/120mins",
+    amount: "400.00 GHC",
+  },
+  {
+    id: 6,
+    startTime: "10:00",
+    endTime: "12:00",
+    minutesPerBooking: "2hrs/120mins",
+    amount: "400.00 GHC",
+  },
+  {
+    id: 7,
+    startTime: "12:00",
+    endTime: "14:00",
+    minutesPerBooking: "2hrs/120mins",
+    amount: "400.00 GHC",
+  },
+  {
+    id: 8,
+    startTime: "14:00",
+    endTime: "16:00",
+    minutesPerBooking: "2hrs/120mins",
+    amount: "400.00 GHC",
+  },
+  {
+    id: 9,
+    startTime: "16:00",
+    endTime: "18:00",
+    minutesPerBooking: "2hrs/120mins",
+    amount: "400.00 GHC",
+  },
+  {
+    id: 10,
+    startTime: "18:00",
+    endTime: "20:00",
+    minutesPerBooking: "2hrs/120mins",
+    amount: "400.00 GHC",
+  },
+  {
+    id: 11,
+    startTime: "20:00",
+    endTime: "22:00",
+    minutesPerBooking: "2hrs/120mins",
+    amount: "400.00 GHC",
+  },
+  {
+    id: 12,
+    startTime: "22:00",
+    endTime: "00:00",
+    minutesPerBooking: "2hrs/120mins",
+    amount: "400.00 GHC",
+  },
+];
+
+export default timeSlots;
