@@ -13,6 +13,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [selectedDate, setSelectedDate] = useState();
   const [selectedTime, setSelectedTime] = useState();
   const [Pitchdetails, setPitchdetails] = useState();
+  const [adminBookingInfo, setAdminBookingInfo] = useState([]);
 
   return (
     <globalContext.Provider
@@ -25,6 +26,8 @@ export const GlobalContextProvider = ({ children }) => {
         setSelectedDate,
         selectedTime,
         setSelectedTime,
+        adminBookingInfo,
+        setAdminBookingInfo,
       }}
     >
       {children}
