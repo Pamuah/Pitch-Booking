@@ -20,7 +20,7 @@ function App() {
         <Routes>
           <Route index element={<LandingPage />} />
           <Route path="/homepage" element={<HomePage />} />
-          <Route path="/landingPage" element={<LandingPage />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/bookingPage" element={<BookingPage />} />
           <Route path="/adminlogin" element={<AdminLoginPage />} />
           <Route path="/admindashboard" element={<AdminDashboard />} />
