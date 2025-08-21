@@ -18,7 +18,6 @@ function App() {
     <Router>
       <GlobalContextProvider>
         <Routes>
-          <Route index element={<LandingPage />} />
           <Route path="/homepage" element={<HomePage />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/bookingPage" element={<BookingPage />} />
