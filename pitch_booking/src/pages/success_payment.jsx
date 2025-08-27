@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { sendControlData } from "../api services/get_service";
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const reference = searchParams.get("reference"); // ✅ FIXED
+  const [paymentData, setPaymentData] = useState();
 
   useEffect(() => {
     if (!reference) return;
@@ -15,6 +16,7 @@ const PaymentSuccess = () => {
           {},
           `/api/bookings/reference/${reference}`
         );
+        setPaymentData(response.data);
         console.log("Payment data:", response.data);
       } catch (err) {
         console.error("Failed to fetch booking:", err);
@@ -24,6 +26,7 @@ const PaymentSuccess = () => {
     fetchBooking();
   }, [reference]);
 
+  console.log("Payment data222:", paymentData);
   return (
     <div className="bg-gray-50 min-h-screen flex items-center justify-center px-4">
       <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
@@ -56,13 +59,18 @@ const PaymentSuccess = () => {
 
         <div className="mt-6 border-t pt-4 text-left text-sm text-gray-500 space-y-1">
           <p>
-            <strong>Transaction Reference:</strong> {reference || "N/A"}
+            <strong>Transaction Reference:</strong>{" "}
+            {paymentData?.bookingCode || "N/A"}
           </p>
           <p>
-            <strong>Amount:</strong> GHC 120.00
+            <strong>Time:</strong> {paymentData?.startTime} -{" "}
+            {paymentData?.endTime || "N/A"}
           </p>
           <p>
-            <strong>Date:</strong> August 1, 2025
+            <strong>Amount:</strong> {paymentData?.totalCost || "N/A"}
+          </p>
+          <p>
+            <strong>Date:</strong> {paymentData?.date || "N/A"}
           </p>
         </div>
 
