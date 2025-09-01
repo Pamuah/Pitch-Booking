@@ -9,8 +9,7 @@ const LandingPage = () => {
     <div
       className="relative min-h-screen w-full pt-4 px-3"
       style={{
-        backgroundImage:
-          "url('https://images.pexels.com/photos/3845970/pexels-photo-3845970.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
+        backgroundImage: "url('/assets/landing_image.jpeg')",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",

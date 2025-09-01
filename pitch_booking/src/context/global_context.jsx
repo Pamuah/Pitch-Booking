@@ -4,16 +4,18 @@ import React, { createContext, useContext, useState } from "react";
 const globalContext = createContext(null);
 
 export const GlobalContextProvider = ({ children }) => {
+  const today = new Date().toISOString().split("T")[0];
   const [bookerInfo, setBookerInfo] = useState({
     name: "",
     email: "",
     contact: "",
   });
 
-  const [selectedDate, setSelectedDate] = useState();
+  const [selectedDate, setSelectedDate] = useState(today);
   const [selectedTime, setSelectedTime] = useState();
   const [Pitchdetails, setPitchdetails] = useState();
   const [adminBookingInfo, setAdminBookingInfo] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <globalContext.Provider
@@ -28,6 +30,8 @@ export const GlobalContextProvider = ({ children }) => {
         setSelectedTime,
         adminBookingInfo,
         setAdminBookingInfo,
+        searchQuery,
+        setSearchQuery,
       }}
     >
       {children}

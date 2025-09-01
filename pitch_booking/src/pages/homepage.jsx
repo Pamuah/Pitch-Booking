@@ -11,13 +11,14 @@ const HomePage = () => {
   const [pitches, setPitches] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { Pitchdetails, setPitchdetails } = useGlobalContext();
+  const { Pitchdetails, setPitchdetails, searchQuery } = useGlobalContext();
 
   useEffect(() => {
     const fetchPitches = async () => {
       try {
         const res = await sendControlData({}, "/api/pitches");
         setPitches(res.data);
+        console.log("Fetched pitches:", res.data);
       } catch (err) {
         console.error("Failed to fetch pitches:", err);
       } finally {
@@ -34,6 +35,10 @@ const HomePage = () => {
 
     navigate("/bookingPage");
   };
+
+  const filteredPitches = pitches.filter((pitch) =>
+    pitch.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="relative min-h-screen w-full pt-4 px-3">
@@ -72,7 +77,7 @@ const HomePage = () => {
             <p>No pitches available.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {pitches.map((pitch) => (
+              {filteredPitches.map((pitch) => (
                 <CustomCard
                   key={pitch._id}
                   imageSrc={pitch.imageUrl}
