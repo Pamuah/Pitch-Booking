@@ -4,8 +4,23 @@ import { sendControlData } from "../api services/get_service";
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
-  const reference = searchParams.get("reference"); // ✅ FIXED
+  const reference = searchParams.get("reference");
   const [paymentData, setPaymentData] = useState();
+
+  // ✅ Time formatter (24hr -> 12hr with AM/PM)
+  const formatTimeWithAmPm = (time24) => {
+    if (!time24) return "N/A";
+
+    const [hourStr, minuteStr] = time24.split(":");
+    let hour = parseInt(hourStr, 10);
+    const minutes = minuteStr || "00";
+
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12;
+    hour = hour === 0 ? 12 : hour;
+
+    return `${hour}:${minutes} ${ampm}`;
+  };
 
   useEffect(() => {
     if (!reference) return;
@@ -27,6 +42,7 @@ const PaymentSuccess = () => {
   }, [reference]);
 
   console.log("Payment data222:", paymentData);
+
   return (
     <div className="bg-gray-50 min-h-screen flex items-center justify-center px-4">
       <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
@@ -59,12 +75,18 @@ const PaymentSuccess = () => {
 
         <div className="mt-6 border-t pt-4 text-left text-sm text-gray-500 space-y-1">
           <p>
+            <strong>Booker's Name:</strong> {paymentData?.teamName || "N/A"}
+          </p>
+          <p>
+            <strong>Email:</strong> {paymentData?.email || "N/A"}
+          </p>
+          <p>
             <strong>Transaction Reference:</strong>{" "}
             {paymentData?.bookingCode || "N/A"}
           </p>
           <p>
-            <strong>Time:</strong> {paymentData?.startTime} -{" "}
-            {paymentData?.endTime || "N/A"}
+            <strong>Time:</strong> {formatTimeWithAmPm(paymentData?.startTime)}{" "}
+            - {formatTimeWithAmPm(paymentData?.endTime)}
           </p>
           <p>
             <strong>Amount:</strong> {paymentData?.totalCost || "N/A"}

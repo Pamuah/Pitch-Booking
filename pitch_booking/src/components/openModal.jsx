@@ -1,6 +1,7 @@
 import React from "react";
 import { useGlobalContext } from "../context/global_context";
 import { PostData } from "../api services/post_service";
+import { Mail, User, Phone } from "lucide-react";
 
 const PopUpForm = ({ show, onClose }) => {
   const {
@@ -31,14 +32,20 @@ const PopUpForm = ({ show, onClose }) => {
       const message = response.message;
       const paymentUrl = response.paymentUrl;
 
-      console.log("Booking response:", response, success, message, paymentUrl);
-
       if (success && paymentUrl) {
-        console.log("Booking success. Redirecting to:", paymentUrl);
-        onClose(); // Close modal before redirecting
-        window.location.href = paymentUrl; // Redirect to Paystack
-      } else {
-        alert("Booking failed: " + message);
+        setBookerInfo({
+          name: "",
+          email: "",
+          contact: "",
+        });
+
+        if (success && paymentUrl) {
+          console.log("Booking success. Redirecting to:", paymentUrl);
+          onClose(); // Close modal before redirecting
+          window.location.href = paymentUrl; // Redirect to Paystack
+        } else {
+          alert("Booking failed: " + message);
+        }
       }
     } catch (err) {
       console.error("Booking failed:", err);
@@ -51,45 +58,59 @@ const PopUpForm = ({ show, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 w-96 shadow-lg">
-        <h2 className="text-xl font-semibold mb-4">Enter Your Info</h2>
-        <input
-          type="text"
-          placeholder="Your Name"
-          value={bookerInfo?.name || ""}
-          onChange={(e) =>
-            setBookerInfo({ ...bookerInfo, name: e.target.value })
-          }
-          className="w-full p-2 mb-2 text-sm border border-gray-300 rounded"
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={bookerInfo?.email || ""}
-          onChange={(e) =>
-            setBookerInfo({ ...bookerInfo, email: e.target.value })
-          }
-          className="w-full p-2 mb-2 border text-sm border-gray-300 rounded"
-        />
-        <input
-          type="text"
-          placeholder="Contact Info"
-          value={bookerInfo?.contact || ""}
-          onChange={(e) =>
-            setBookerInfo({ ...bookerInfo, contact: e.target.value })
-          }
-          className="w-full p-2 mb-4 border text-sm border-gray-300 rounded"
-        />
+        <h2 className="text-lg font-semibold mb-4">Enter Details to Book</h2>
+
+        {/* Name input with User icon */}
+        <div className="relative mb-2">
+          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Your Name"
+            value={bookerInfo?.name || ""}
+            onChange={(e) =>
+              setBookerInfo({ ...bookerInfo, name: e.target.value })
+            }
+            className="w-full pl-9 p-2 text-sm border border-gray-300 rounded"
+          />
+        </div>
+
+        {/* Email input with Mail icon */}
+        <div className="relative mb-2">
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <input
+            type="email"
+            placeholder="Email"
+            value={bookerInfo?.email || ""}
+            onChange={(e) =>
+              setBookerInfo({ ...bookerInfo, email: e.target.value })
+            }
+            className="w-full pl-9 p-2 text-sm border border-gray-300 rounded"
+          />
+        </div>
+
+        {/* Phone input with Phone icon */}
+        <div className="relative mb-4">
+          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Phone Number"
+            value={bookerInfo?.contact || ""}
+            onChange={(e) =>
+              setBookerInfo({ ...bookerInfo, contact: e.target.value })
+            }
+            className="w-full pl-9 p-2 text-sm border border-gray-300 rounded"
+          />
+        </div>
+
         <button
-          onClick={() => {
-            triggerApi();
-          }}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          onClick={triggerApi}
+          className="w-full bg-lime-400 text-white py-2 rounded-sm hover:bg-lime-600"
         >
-          Submit
+          Continue
         </button>
         <button
           onClick={onClose}
-          className="w-full mt-2 text-sm text-gray-500 hover:underline"
+          className="w-full mt-2 text-sm text-gray-500 hover:underline hover:text-red-600"
         >
           Cancel
         </button>

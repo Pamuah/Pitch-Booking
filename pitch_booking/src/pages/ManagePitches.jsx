@@ -56,7 +56,7 @@ const ManagePitches = () => {
     formData.append("name", newPitch.name);
     formData.append("location", newPitch.location);
     formData.append("type", newPitch.type);
-    formData.append("pricePerHour", newPitch.hourlyRate);
+    formData.append("pricePerHour", newPitch.pricePerHour);
     formData.append("openingTime", newPitch.startTime);
     formData.append("closingTime", newPitch.closingTime);
 
@@ -109,7 +109,7 @@ const ManagePitches = () => {
       location: pitchToEdit.location || "",
       features: pitchToEdit.features || [],
       pricePerHour: pitchToEdit.pricePerHour || "",
-      openingTime: pitchToEdit.openingTime || "08:00",
+      openingTime: pitchToEdit.startTime || "08:00",
       closingTime: pitchToEdit.closingTime || "22:00",
       image: "",
     });
@@ -165,7 +165,7 @@ const ManagePitches = () => {
     formData.append("name", pitch.name);
     formData.append("type", pitch.type);
     formData.append("location", pitch.location || "");
-    formData.append("openingTime", pitch.openingTime || "");
+    formData.append("openingTime", pitch.startTime || "");
     formData.append("closingTime", pitch.closingTime || "");
     formData.append("pricePerHour", pitch.pricePerHour || "");
 

@@ -2,12 +2,15 @@ import React from "react";
 import { useGlobalContext } from "../context/global_context";
 
 function SearchBar() {
-  const { selectedDate, setSelectedDate } = useGlobalContext();
+  const { selectedDate, setSelectedDate, searchQuery, setSearchQuery } =
+    useGlobalContext();
   return (
     <div className="relative z-20 bg-gray-100 px-2 py-1.5 rounded-full flex items-center h-10 justify-center w-full shadow-md">
       {/* Location Input */}
       <input
         type="text"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="📍 Location"
         className="bg-transparent  md:text-sm font-medium outline-none text-gray-600 px-2 flex-1 hidden md:flex"
       />
